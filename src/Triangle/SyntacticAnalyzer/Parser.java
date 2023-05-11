@@ -62,6 +62,7 @@ import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -331,6 +332,17 @@ public class Parser {
         Command cAST = parseSingleCommand();
         finish(commandPos);
         commandAST = new WhileCommand(eAST, cAST, commandPos);
+      }
+      break;
+    
+    case Token.REPEAT:
+      {
+        acceptIt();
+        Command cAST = parseSingleCommand();
+        accept(Token.UNTIL);
+        Expression eAST = parseExpression();
+        finish(commandPos);
+        commandAST = new RepeatCommand(cAST, eAST, commandPos);
       }
       break;
 

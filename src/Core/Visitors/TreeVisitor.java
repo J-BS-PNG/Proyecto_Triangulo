@@ -68,6 +68,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -114,6 +115,10 @@ public class TreeVisitor implements Visitor {
     
     public Object visitWhileCommand(WhileCommand ast, Object obj) {
         return(createBinary("While Command", ast.E, ast.C));
+    }
+    
+    public Object visitRepeatCommand(RepeatCommand ast, Object obj) {
+        return(createBinary("Repeat Command", ast.C, ast.E));
     }
     // </editor-fold>
     

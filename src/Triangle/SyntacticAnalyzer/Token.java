@@ -84,6 +84,9 @@ final class Token extends Object {
     TYPE		= 18,
     VAR			= 19,
     WHILE		= 20,
+    //Tarea 10
+    REPEAT              = 35,
+    UNTIL               = 36,
 
     // punctuation...
     DOT			= 21,
@@ -127,6 +130,8 @@ final class Token extends Object {
     "type",
     "var",
     "while",
+    "repeat",
+    "until",
     ".",
     ":",
     ";",

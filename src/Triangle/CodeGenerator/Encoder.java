@@ -69,6 +69,7 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -157,7 +158,21 @@ public final class Encoder implements Visitor {
     emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
     return null;
   }
+  
 
+  public Object visitRepeatCommand(RepeatCommand ast, Object o) {
+    Frame frame = (Frame) o;
+    int jumpAddr, loopAddr;
+
+
+    loopAddr = nextInstrAddr;
+    ast.E.visit(this, frame);
+    emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, loopAddr);
+    jumpAddr = nextInstrAddr;
+    ast.C.visit(this, frame);
+    patch(jumpAddr, nextInstrAddr);
+    return null;
+  }
 
   // Expressions
   public Object visitArrayExpression(ArrayExpression ast, Object o) {

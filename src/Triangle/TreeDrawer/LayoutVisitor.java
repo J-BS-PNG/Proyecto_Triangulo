@@ -61,6 +61,7 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -119,6 +120,10 @@ public class LayoutVisitor implements Visitor {
 
   public Object visitWhileCommand(WhileCommand ast, Object obj) {
     return layoutBinary("WhileCom.", ast.E, ast.C);
+  }
+  
+  public Object visitRepeatCommand(RepeatCommand ast, Object obj) {
+    return layoutBinary("RepeatCom.", ast.C, ast.E);
   }
 
 

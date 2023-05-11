@@ -64,6 +64,7 @@ import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -147,6 +148,15 @@ public final class Checker implements Visitor {
   }
 
   public Object visitWhileCommand(WhileCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    ast.C.visit(this, null);
+    return null;
+  }
+  
+  
+    public Object visitRepeatCommand(RepeatCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
