@@ -270,11 +270,11 @@ public class Parser {
 
     SourcePosition commandPos = new SourcePosition();
     start(commandPos);
-
     switch (currentToken.kind) {
 
     case Token.IDENTIFIER:
       {
+        System.out.println("Entro inde");
         Identifier iAST = parseIdentifier();
         if (currentToken.kind == Token.LPAREN) {
           acceptIt();
@@ -295,6 +295,7 @@ public class Parser {
       break;
 
     case Token.BEGIN:
+        System.out.println("Entro beg");
       acceptIt();
       commandAST = parseCommand();
       accept(Token.END);
@@ -302,6 +303,7 @@ public class Parser {
 
     case Token.LET:
       {
+        System.out.println("Entro let");
         acceptIt();
         Declaration dAST = parseDeclaration();
         accept(Token.IN);
@@ -313,6 +315,7 @@ public class Parser {
 
     case Token.IF:
       {
+          System.out.println("Entro IF");
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.THEN);
@@ -326,6 +329,7 @@ public class Parser {
 
     case Token.WHILE:
       {
+          System.out.println("Entro while");
         acceptIt();
         Expression eAST = parseExpression();
         accept(Token.DO);
@@ -337,6 +341,7 @@ public class Parser {
     
     case Token.REPEAT:
       {
+        System.out.println("Entro repea");
         acceptIt();
         Command cAST = parseSingleCommand();
         accept(Token.UNTIL);
@@ -351,12 +356,13 @@ public class Parser {
     case Token.ELSE:
     case Token.IN:
     case Token.EOT:
-
+      System.out.println("Entro");
       finish(commandPos);
       commandAST = new EmptyCommand(commandPos);
       break;
 
     default:
+      System.out.println("Entro");
       syntacticError("\"%\" cannot start a command",
         currentToken.spelling);
       break;
