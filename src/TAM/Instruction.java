@@ -38,7 +38,7 @@ public class Instruction {
 
   // Represents TAM instructions.
   public int op; // OpCode
-  public int r;  // RegisterNumber
+  public int r;  // RegisterNumberpCo
   public int n;  // Length
   public int d;  // Operand
 
