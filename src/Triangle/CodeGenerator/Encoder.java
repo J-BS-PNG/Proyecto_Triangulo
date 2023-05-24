@@ -33,6 +33,7 @@ import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.BoolTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CallCommand;
 import Triangle.AbstractSyntaxTrees.CallExpression;
+import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
@@ -128,6 +129,30 @@ public final class Encoder implements Visitor {
     patch(jumpifAddr, nextInstrAddr);
     ast.C2.visit(this, frame);
     patch(jumpAddr, nextInstrAddr);
+    return null;
+  }
+  
+  public Object visitCaseCommand(CaseCommand ast, Object o) {
+    Frame frame = (Frame) o;
+    emit(Machine.PUSHop, 0, 0, 1);
+        for(IntegerLiteral IL : ast.MAP.keySet()){
+            ast.E.visit(this, frame);
+            emit(Machine.LOADLop, 0, 0, Integer.parseInt(IL.spelling));
+            emit(Machine.LOADLop, 0,0,1);
+            emit(Machine.CALLop, Machine.LBr, Machine.PBr, Machine.eqDisplacement);
+            int jumpAddr = nextInstrAddr;
+            emit(Machine.JUMPIFop, Machine.falseRep, Machine.CBr, jumpAddr);
+            ast.MAP.get(IL).visit(this, frame);
+            emit(Machine.LOADLop, 0, 0, 1);
+            emit(Machine.STOREop, 1, Machine.STr, -2);
+            patch(jumpAddr, nextInstrAddr);
+        }
+        emit(Machine.LOADop, 1, Machine.STr, -1);
+        int jumpEndAddr = nextInstrAddr;
+        emit(Machine.JUMPIFop, Machine.trueRep, Machine.CBr, jumpEndAddr);
+        ast.C.visit(this, frame);
+        patch(jumpEndAddr, nextInstrAddr);
+        emit(Machine.POPop, 0, 0, 1);
     return null;
   }
 

@@ -14,9 +14,11 @@ import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.BoolTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CallCommand;
 import Triangle.AbstractSyntaxTrees.CallExpression;
+import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -70,6 +72,7 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
+import java.util.LinkedHashMap;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -124,6 +127,11 @@ public class TreeVisitor implements Visitor {
     
     public Object visitForCommand(ForCommand ast, Object obj) {
         return(createQuaternary("For Command", ast.I, ast.E1, ast.E2, ast.C));
+    }
+    
+    public Object visitCaseCommand(CaseCommand ast, Object obj) {
+        //Hay que modificar
+        return(createTernaryMAP("Case Command", ast.E, ast.MAP,ast.C));
     }
     // </editor-fold>
     
@@ -423,6 +431,26 @@ public class TreeVisitor implements Visitor {
         DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
         t.add((DefaultMutableTreeNode)child1.visit(this, null));
         t.add((DefaultMutableTreeNode)child2.visit(this, null));
+        t.add((DefaultMutableTreeNode)child3.visit(this, null));
+        
+        return(t);        
+    }
+    
+    /**
+     * Creates a ternary tree node.
+     * @param caption The tree's caption (text to be shown when the tree is drawn).
+     * @param child1 The first children node.
+     * @param MAP The second MAP of children node.
+     * @param child3 The third children node.
+     * @return The tree node.
+     */
+    public DefaultMutableTreeNode createTernaryMAP(String caption, AST child1, LinkedHashMap<IntegerLiteral, Command>  MAP, AST child3) {
+        DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
+        t.add((DefaultMutableTreeNode)child1.visit(this, null));
+        for (IntegerLiteral c : MAP.keySet()) {
+            t.add((DefaultMutableTreeNode)c.visit(this, null));
+            t.add((DefaultMutableTreeNode)MAP.get(c).visit(this, null));
+       }
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
         
         return(t);        

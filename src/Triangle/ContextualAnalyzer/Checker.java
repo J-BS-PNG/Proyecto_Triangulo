@@ -25,9 +25,11 @@ import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.BoolTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CallCommand;
 import Triangle.AbstractSyntaxTrees.CallExpression;
+import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -88,6 +90,8 @@ import Triangle.AbstractSyntaxTrees.Visitor;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.SyntacticAnalyzer.SourcePosition;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public final class Checker implements Visitor {
 
@@ -131,6 +135,30 @@ public final class Checker implements Visitor {
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
     ast.C1.visit(this, null);
     ast.C2.visit(this, null);
+    return null;
+  }
+  
+  public Object visitCaseCommand(CaseCommand ast, Object o) {
+    idTable.openScope();
+    ast.E.visit(this, o);
+    if(ast.E.type != StdEnvironment.integerType)
+        reporter.reportError("incompatible expression type (Integer Expression expected)", "", ast.position);
+    LinkedHashMap<IntegerLiteral, Command> MAP = ast.MAP;
+    ArrayList<IntegerLiteral> AL = new ArrayList<IntegerLiteral>();
+    for (IntegerLiteral IL : MAP.keySet()) {
+        for (IntegerLiteral IL2 : AL) {
+            if (IL2.spelling.equals(IL.spelling)) {
+                reporter.reportError("re-used integer literal in case", "", ast.position);
+            }
+        }
+        Command C = MAP.get(IL);
+        C.visit(this, null);
+        IL.visit(this, null);
+        AL.add(IL);
+    }
+    Command C = ast.C;
+    C.visit(this, null);
+    idTable.closeScope();
     return null;
   }
 
