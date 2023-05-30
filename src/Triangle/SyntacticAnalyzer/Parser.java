@@ -84,6 +84,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import java.awt.List;
 import java.util.LinkedHashMap;
 
 public class Parser {
@@ -683,6 +684,7 @@ public class Parser {
         TypeDenoter tAST = parseTypeDenoter();
         finish(declarationPos);
         declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
+        
       }
       break;
 
@@ -727,7 +729,31 @@ public class Parser {
         declarationAST = new TypeDeclaration(iAST, tAST, declarationPos);
       }
       break;
-
+      
+      case Token.CLASS:
+      {
+        acceptIt();
+        String className = currentToken.spelling;
+        accept(Token.IDENTIFIER);
+        String superClass = null;
+        if (currentToken.kind == Token.EXTENDS){
+            acceptIt();
+            superClass = currentToken.spelling;
+            accept(Token.IDENTIFIER);
+        }
+        
+        accept(Token.LBRACKET);
+        
+        List<VariableDeclaration> variableDeclarations = parseVariableDeclarations();
+        List<FunctionDeclaration> functionDeclarations = parseFunctionDeclarations();
+        
+        accept(Token.RBRACKET);
+        finish(declarationPos);
+        
+        declarationAST = new ClassDeclarationDeclaration(className, superClass, variableDeclarations, functionDeclarations, declarationPos);
+      }
+      break;
+      
     default:
       syntacticError("\"%\" cannot start a declaration",
         currentToken.spelling);
@@ -817,6 +843,7 @@ public class Parser {
         accept(Token.RPAREN);
         finish(formalPos);
         formalAST = new ProcFormalParameter(iAST, fpsAST, formalPos);
+        
       }
       break;
 
@@ -831,6 +858,7 @@ public class Parser {
         TypeDenoter tAST = parseTypeDenoter();
         finish(formalPos);
         formalAST = new FuncFormalParameter(iAST, fpsAST, tAST, formalPos);
+        
       }
       break;
 
