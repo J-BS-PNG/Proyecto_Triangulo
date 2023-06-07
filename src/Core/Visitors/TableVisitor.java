@@ -18,9 +18,11 @@ import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.ClassTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.Declaration;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -528,6 +530,20 @@ public class TableVisitor implements Visitor {
   
   public Object visitRecordTypeDenoter(RecordTypeDenoter ast, Object o) {   
       ast.FT.visit(this, null);
+      return(null);
+  }
+  
+  public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {    
+      try {
+      addIdentifier(ast.CN.spelling, 
+              "KnownRoutine", 
+              (ast.entity!=null?ast.entity.size:0), 
+              ((KnownRoutine)ast.entity).address.level, 
+              ((KnownRoutine)ast.entity).address.displacement, 
+              -1);      
+      } catch (NullPointerException e) { }
+      ast.SC.visit(this, null); 
+      ast.dAst.visit(this, null); 
       return(null);
   }
 

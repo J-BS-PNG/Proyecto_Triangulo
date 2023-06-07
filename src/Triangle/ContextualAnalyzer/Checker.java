@@ -29,6 +29,7 @@ import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.ClassTypeDenoter;
 import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
@@ -669,6 +670,11 @@ public final class Checker implements Visitor {
       return StdEnvironment.errorType;
     }
     return ((TypeDeclaration) binding).T;
+  }
+  
+  public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {
+   //Hacer codigo
+    return null;
   }
 
   public Object visitIntTypeDenoter(IntTypeDenoter ast, Object o) {

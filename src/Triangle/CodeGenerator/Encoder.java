@@ -37,6 +37,7 @@ import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.ClassTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -635,6 +636,18 @@ public final class Encoder implements Visitor {
       writeTableDetails(ast);
     } else
       typeSize = ast.entity.size;
+    return new Integer(typeSize);
+  }
+  
+  public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {
+    int typeSize;
+    if (ast.entity == null){
+        typeSize = ((Integer) ast.dAst.visit(this, new Integer(0))).intValue();
+        ast.entity = new TypeRepresentation(typeSize);
+        writeTableDetails(ast);
+    } else {
+        typeSize = ast.entity.size;
+    }
     return new Integer(typeSize);
   }
 

@@ -27,6 +27,7 @@ import Triangle.AbstractSyntaxTrees.CallExpression;
 import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.ClassTypeDenoter;
 import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
@@ -84,7 +85,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
-import java.awt.List;
+import java.util.List;
 import java.util.LinkedHashMap;
 
 public class Parser {
@@ -730,30 +731,6 @@ public class Parser {
       }
       break;
       
-      case Token.CLASS:
-      {
-        acceptIt();
-        String className = currentToken.spelling;
-        accept(Token.IDENTIFIER);
-        String superClass = null;
-        if (currentToken.kind == Token.EXTENDS){
-            acceptIt();
-            superClass = currentToken.spelling;
-            accept(Token.IDENTIFIER);
-        }
-        
-        accept(Token.LBRACKET);
-        
-        List<VariableDeclaration> variableDeclarations = parseVariableDeclarations();
-        List<FunctionDeclaration> functionDeclarations = parseFunctionDeclarations();
-        
-        accept(Token.RBRACKET);
-        finish(declarationPos);
-        
-        declarationAST = new ClassDeclarationDeclaration(className, superClass, variableDeclarations, functionDeclarations, declarationPos);
-      }
-      break;
-      
     default:
       syntacticError("\"%\" cannot start a declaration",
         currentToken.spelling);
@@ -862,6 +839,7 @@ public class Parser {
       }
       break;
 
+
     default:
       syntacticError("\"%\" cannot start a formal parameter",
         currentToken.spelling);
@@ -959,7 +937,7 @@ public class Parser {
         actualAST = new FuncActualParameter(iAST, actualPos);
       }
       break;
-
+      
     default:
       syntacticError("\"%\" cannot start an actual parameter",
         currentToken.spelling);
@@ -1009,6 +987,42 @@ public class Parser {
         accept(Token.END);
         finish(typePos);
         typeAST = new RecordTypeDenoter(fAST, typePos);
+      }
+      break;
+    
+    case Token.CLASS:
+      {
+        acceptIt();
+        Identifier className = parseIdentifier();
+//        accept(Token.IDENTIFIER);
+        Identifier  superClass = null;
+        if (currentToken.kind == Token.EXTENDS){
+            acceptIt();
+            superClass = parseIdentifier();
+//            accept(Token.IDENTIFIER);
+        }
+        
+        accept(Token.LCURLY);
+        
+        Declaration dAST = parseDeclaration();
+        
+//        List<Declaration> variableDeclarations = null; //= parseVariableDeclarations()
+//        List<Declaration> functionDeclarations = null; //= parseFunctionDeclarations()
+//        
+//        // realizar declaraciones
+//        
+//        while (currentToken.kind != Token.RBRACKET){
+//            if(currentToken.kind == Token.VAR){
+//                variableDeclarations.add(parseDeclaration());
+//            } else if (currentToken.kind == Token.VAR){
+//                functionDeclarations.add(parseDeclaration());
+//            }
+//        }
+          
+        accept(Token.RCURLY);
+        finish(typePos);
+        
+        typeAST = new ClassTypeDenoter(className, superClass, dAST, typePos);
       }
       break;
 

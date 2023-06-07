@@ -30,6 +30,7 @@ import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.ClassTypeDenoter;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
@@ -331,6 +332,10 @@ public class LayoutVisitor implements Visitor {
 
   public Object visitRecordTypeDenoter(RecordTypeDenoter ast, Object obj) {
     return layoutUnary("Rec.TypeD.", ast.FT);
+  }
+  
+  public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object obj) {
+    return null;
   }
 
 

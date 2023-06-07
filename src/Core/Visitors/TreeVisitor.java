@@ -18,10 +18,12 @@ import Triangle.AbstractSyntaxTrees.CaseCommand;
 import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
 import Triangle.AbstractSyntaxTrees.CharacterExpression;
 import Triangle.AbstractSyntaxTrees.CharacterLiteral;
+import Triangle.AbstractSyntaxTrees.ClassTypeDenoter;
 import Triangle.AbstractSyntaxTrees.Command;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.Declaration;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -73,6 +75,7 @@ import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.AbstractSyntaxTrees.RepeatCommand;
 import java.util.LinkedHashMap;
+import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -331,6 +334,10 @@ public class TreeVisitor implements Visitor {
         return(createUnary("Record Type Denoter", ast.FT));
     }
     
+    public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object obj) {
+        return(createTernary("Class Type Denoter", ast.CN, ast.SC, ast.dAst));        
+    }
+    
     public Object visitMultipleFieldTypeDenoter(MultipleFieldTypeDenoter ast, Object obj) {
         return(createTernary("Multiple Field Type Denoter", ast.I, ast.T, ast.FT));
     }
@@ -450,9 +457,31 @@ public class TreeVisitor implements Visitor {
         for (IntegerLiteral c : MAP.keySet()) {
             t.add((DefaultMutableTreeNode)c.visit(this, null));
             t.add((DefaultMutableTreeNode)MAP.get(c).visit(this, null));
-       }
+        }
         t.add((DefaultMutableTreeNode)child3.visit(this, null));
         
+        return(t);        
+    }
+    
+     /**
+     * Creates a ternary tree node.
+     * @param caption The tree's caption (text to be shown when the tree is drawn).
+     * @param child1 The first children node.
+     * @param child2 The second children node.
+     * @param List<Var> The third List of children node.
+     * @param List<Function> The fourth List children node.
+     * @return The tree node.
+     */
+    public DefaultMutableTreeNode createQuaternaryList(String caption, AST child1, AST child2, List<Declaration>  list1,  List<Declaration> list2) {
+        DefaultMutableTreeNode t = new DefaultMutableTreeNode(caption);
+        t.add((DefaultMutableTreeNode)child1.visit(this, null));
+        t.add((DefaultMutableTreeNode)child2.visit(this, null));
+        for (Declaration v : list1) {
+            t.add((DefaultMutableTreeNode)v.visit(this, null));
+        }
+        for (Declaration f : list2) {
+            t.add((DefaultMutableTreeNode)f.visit(this, null));
+        }    
         return(t);        
     }
     
