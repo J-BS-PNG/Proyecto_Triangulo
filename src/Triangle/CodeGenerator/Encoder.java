@@ -514,6 +514,7 @@ public final class Encoder implements Visitor {
 
   public Object visitFuncActualParameter(FuncActualParameter ast, Object o) {
     Frame frame = (Frame) o;
+    System.out.println(ast.I.decl.entity);
     if (ast.I.decl.entity instanceof KnownRoutine) {
       ObjectAddress address = ((KnownRoutine) ast.I.decl.entity).address;
       // static link, code address
@@ -640,15 +641,16 @@ public final class Encoder implements Visitor {
   }
   
   public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {
-    int typeSize;
-    if (ast.entity == null){
-        typeSize = ((Integer) ast.dAst.visit(this, new Integer(0))).intValue();
-        ast.entity = new TypeRepresentation(typeSize);
-        writeTableDetails(ast);
+    int extraSize;
+    Frame frame = new Frame(0, 2);
+    if (ast.entity == null) {
+      extraSize = ((Integer) ast.dAst.visit(this,frame)).intValue();
+      ast.entity = new TypeRepresentation(extraSize);
+      writeTableDetails(ast);
     } else {
-        typeSize = ast.entity.size;
+        extraSize = ast.entity.size;
     }
-    return new Integer(typeSize);
+    return new Integer(extraSize);
   }
 
 

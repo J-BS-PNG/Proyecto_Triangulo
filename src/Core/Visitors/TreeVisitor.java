@@ -335,7 +335,12 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object obj) {
-        return(createTernary("Class Type Denoter", ast.CN, ast.SC, ast.dAst));        
+        if (ast.SC == null){
+            return(createBinary("class Type Denoter", ast.CN,ast.dAst));
+        } else {
+            return(createTernary("class Type Denoter", ast.CN, ast.SC,ast.dAst)); 
+        }
+             
     }
     
     public Object visitMultipleFieldTypeDenoter(MultipleFieldTypeDenoter ast, Object obj) {

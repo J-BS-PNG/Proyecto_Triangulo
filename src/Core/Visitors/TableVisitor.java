@@ -533,16 +533,11 @@ public class TableVisitor implements Visitor {
       return(null);
   }
   
-  public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {    
-      try {
-      addIdentifier(ast.CN.spelling, 
-              "KnownRoutine", 
-              (ast.entity!=null?ast.entity.size:0), 
-              ((KnownRoutine)ast.entity).address.level, 
-              ((KnownRoutine)ast.entity).address.displacement, 
-              -1);      
-      } catch (NullPointerException e) { }
-      ast.SC.visit(this, null); 
+  public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {
+      ast.CN.visit(this, null);
+      if (ast.SC != null){
+          ast.SC.visit(this, null);
+      }
       ast.dAst.visit(this, null); 
       return(null);
   }
@@ -557,8 +552,6 @@ public class TableVisitor implements Visitor {
       ast.FT.visit(this, null);
       ast.I.visit(this, null);
       ast.T.visit(this, null);
-
-
       return(null);
   }
   

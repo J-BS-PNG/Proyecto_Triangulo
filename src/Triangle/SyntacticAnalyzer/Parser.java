@@ -288,10 +288,12 @@ public class Parser {
           commandAST = new CallCommand(iAST, apsAST, commandPos);
 
         } else {
-
+          System.out.println("iAST: " + iAST.spelling);
           Vname vAST = parseRestOfVname(iAST);
+          System.out.println("vAST: "+vAST.position);
           accept(Token.BECOMES);
           Expression eAST = parseExpression();
+          System.out.println("eAST: " + eAST.position);
           finish(commandPos);
           commandAST = new AssignCommand(vAST, eAST, commandPos);
         }
@@ -617,13 +619,13 @@ public class Parser {
     SourcePosition vnamePos = new SourcePosition();
     vnamePos = identifierAST.position;
     Vname vAST = new SimpleVname(identifierAST, vnamePos);
-
     while (currentToken.kind == Token.DOT ||
            currentToken.kind == Token.LBRACKET) {
 
       if (currentToken.kind == Token.DOT) {
         acceptIt();
         Identifier iAST = parseIdentifier();
+        System.out.println("Identifier: "+iAST.spelling);
         vAST = new DotVname(vAST, iAST, vnamePos);
       } else {
         acceptIt();
@@ -1001,9 +1003,7 @@ public class Parser {
             superClass = parseIdentifier();
 //            accept(Token.IDENTIFIER);
         }
-        
-        accept(Token.LCURLY);
-        
+
         Declaration dAST = parseDeclaration();
         
 //        List<Declaration> variableDeclarations = null; //= parseVariableDeclarations()
@@ -1018,10 +1018,9 @@ public class Parser {
 //                functionDeclarations.add(parseDeclaration());
 //            }
 //        }
-          
-        accept(Token.RCURLY);
-        finish(typePos);
         
+        accept(Token.END);
+        finish(typePos);
         typeAST = new ClassTypeDenoter(className, superClass, dAST, typePos);
       }
       break;
