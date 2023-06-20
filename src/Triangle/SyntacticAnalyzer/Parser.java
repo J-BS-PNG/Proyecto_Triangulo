@@ -288,12 +288,9 @@ public class Parser {
           commandAST = new CallCommand(iAST, apsAST, commandPos);
 
         } else {
-          System.out.println("iAST: " + iAST.spelling);
           Vname vAST = parseRestOfVname(iAST);
-          System.out.println("vAST: "+vAST.position);
           accept(Token.BECOMES);
           Expression eAST = parseExpression();
-          System.out.println("eAST: " + eAST.position);
           finish(commandPos);
           commandAST = new AssignCommand(vAST, eAST, commandPos);
         }
@@ -625,7 +622,6 @@ public class Parser {
       if (currentToken.kind == Token.DOT) {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        System.out.println("Identifier: "+iAST.spelling);
         vAST = new DotVname(vAST, iAST, vnamePos);
       } else {
         acceptIt();
@@ -1004,24 +1000,12 @@ public class Parser {
 //            accept(Token.IDENTIFIER);
         }
 
+        FieldTypeDenoter fAST = parseFieldTypeDenoter();
         Declaration dAST = parseDeclaration();
-        
-//        List<Declaration> variableDeclarations = null; //= parseVariableDeclarations()
-//        List<Declaration> functionDeclarations = null; //= parseFunctionDeclarations()
-//        
-//        // realizar declaraciones
-//        
-//        while (currentToken.kind != Token.RBRACKET){
-//            if(currentToken.kind == Token.VAR){
-//                variableDeclarations.add(parseDeclaration());
-//            } else if (currentToken.kind == Token.VAR){
-//                functionDeclarations.add(parseDeclaration());
-//            }
-//        }
-        
+       
         accept(Token.END);
         finish(typePos);
-        typeAST = new ClassTypeDenoter(className, superClass, dAST, typePos);
+        typeAST = new ClassTypeDenoter(className, superClass, fAST, dAST, typePos);
       }
       break;
 

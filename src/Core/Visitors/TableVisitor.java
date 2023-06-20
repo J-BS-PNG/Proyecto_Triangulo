@@ -538,7 +538,8 @@ public class TableVisitor implements Visitor {
       if (ast.SC != null){
           ast.SC.visit(this, null);
       }
-      ast.dAst.visit(this, null); 
+      ast.fAst.visit(this, null); 
+      ast.dAst.visit(this, null);
       return(null);
   }
 

@@ -336,9 +336,9 @@ public class LayoutVisitor implements Visitor {
   
   public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object obj) {
     if (ast.SC != null){
-        return layoutBinary("Class.TypeD.", ast.CN,ast.dAst);
+        return layoutBinary("Class.TypeD.", ast.CN,ast.fAst);
     } else {
-        return layoutTernary("Class.TypeD.", ast.CN, ast.SC,ast.dAst);
+        return layoutTernary("Class.TypeD.", ast.CN, ast.SC,ast.fAst);
     }
   }
 

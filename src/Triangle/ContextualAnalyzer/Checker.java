@@ -104,9 +104,6 @@ public final class Checker implements Visitor {
   public Object visitAssignCommand(AssignCommand ast, Object o) {
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-
-    System.out.println("Punto:" +ast.V.visit(this,  new Frame(0, 0)));
-    System.out.println(eType.getClass().toString());
     //Modificar
     if (!ast.V.variable)
       reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
@@ -680,8 +677,9 @@ public final class Checker implements Visitor {
   public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object o) {
    //Hacer codigo
     ast.CN.visit(this, null);
+    ast.fAst = (FieldTypeDenoter) ast.fAst.visit(this, null); 
     idTable.openScope();
-    ast.dAst.visit(this, null); 
+    ast.dAst.visit(this, null);
     idTable.closeScope();
     return ast;
   }
@@ -753,23 +751,22 @@ public final class Checker implements Visitor {
   public Object visitDotVname(DotVname ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
-    System.out.println("Dot: "+vType.getClass().toString());
+
     ast.variable = ast.V.variable;
     if (! (vType instanceof RecordTypeDenoter) && !(vType instanceof ClassTypeDenoter))
       reporter.reportError ("record expected here", "", ast.V.position);
     else {
-      if(vType instanceof RecordTypeDenoter){
+      if(vType instanceof RecordTypeDenoter ){
         ast.type = checkFieldIdentifier(((RecordTypeDenoter) vType).FT, ast.I);
         if (ast.type == StdEnvironment.errorType)
           reporter.reportError ("no field \"%\" in this record type",
                                 ast.I.spelling, ast.I.position);
-      } else {
-        ast.type = checkFieldClassIdentifier(((ClassTypeDenoter) vType).dAst, ast.I);
-        System.out.println("Classs type: "+ ast.type);
-        if (ast.type == StdEnvironment.errorType)
-          reporter.reportError ("no field \"%\" in this record type",
-                                ast.I.spelling, ast.I.position);
-      }
+        }else if( vType instanceof ClassTypeDenoter ){
+            ast.type = checkFieldIdentifier(((ClassTypeDenoter) vType).fAst, ast.I);
+            if (ast.type == StdEnvironment.errorType)
+              reporter.reportError ("no field \"%\" in this record type",
+                                    ast.I.spelling, ast.I.position);
+        }
     }
     return ast.type;
   }
@@ -875,20 +872,6 @@ public final class Checker implements Visitor {
     return StdEnvironment.errorType;
   }
   
-  private static TypeDenoter checkFieldClassIdentifier(Declaration ast, Identifier I) {
-    if (ast instanceof VarDeclaration) {
-      VarDeclaration ft = (VarDeclaration) ast;
-      if (ft.I.spelling.compareTo(I.spelling) == 0) {
-        I.decl = ast;
-        return ft.T;
-      } else {
-//        return checkFieldIdentifier (ft.FT, I);
-      }
-    }else if (ast instanceof SequentialDeclaration) {
-        return checkFieldClassIdentifier(((SequentialDeclaration) (ast)).D1, I);
-    } 
-    return StdEnvironment.errorType;
-  }
 
 
   // Creates a small AST to represent the "declaration" of a standard

@@ -1,0 +1,27 @@
+let
+
+type nuevo ~ class point
+
+	x: Integer,
+	y: Integer,
+	r: Integer
+	
+	func sum (n: Integer, s: Integer) : Integer ~
+		n+s;
+	func res (n: Integer, s: Integer) : Integer ~
+		n-s
+	end;
+ 
+type pu ~ record i:Integer, j:Integer
+	end;
+
+var la: nuevo
+in begin
+
+la.x := 1;
+la.y := 2;
+
+putint(la.y);
+
+
+end

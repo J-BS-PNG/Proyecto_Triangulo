@@ -19,10 +19,11 @@ import java.util.List;
 
 public class ClassTypeDenoter extends TypeDenoter {
 
-  public ClassTypeDenoter (Identifier className, Identifier superClass ,Declaration dAST, SourcePosition thePosition) {
+  public ClassTypeDenoter (Identifier className, Identifier superClass ,FieldTypeDenoter fAST, Declaration dAST, SourcePosition thePosition) {
     super (thePosition);
     CN = className;
     SC = superClass;
+    fAst = fAST;
     dAst = dAST;
   }
 
@@ -34,12 +35,13 @@ public class ClassTypeDenoter extends TypeDenoter {
     if (obj != null && obj instanceof ErrorTypeDenoter)
       return true;
     else if (obj != null && obj instanceof ClassTypeDenoter)
-      return this.dAst.equals(((ClassTypeDenoter) obj).dAst);
+      return this.fAst.equals(((ClassTypeDenoter) obj).fAst);
     else
       return false;
   }
 
   public Identifier CN;
   public Identifier SC;
+  public FieldTypeDenoter fAst;
   public Declaration dAst;
 }

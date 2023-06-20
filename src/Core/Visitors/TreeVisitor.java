@@ -336,9 +336,9 @@ public class TreeVisitor implements Visitor {
     
     public Object visitClassTypeDenoter(ClassTypeDenoter ast, Object obj) {
         if (ast.SC == null){
-            return(createBinary("class Type Denoter", ast.CN,ast.dAst));
+            return(createTernary("class Type Denoter", ast.CN,ast.fAst, ast.dAst));
         } else {
-            return(createTernary("class Type Denoter", ast.CN, ast.SC,ast.dAst)); 
+            return(createQuaternary("class Type Denoter", ast.CN, ast.SC,ast.fAst, ast.dAst)); 
         }
              
     }
